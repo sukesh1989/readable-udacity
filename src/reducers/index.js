@@ -1,5 +1,5 @@
 
-  import { CREATE_COMMENT,VOTE_COMMENT,UPDATE_COMMENT,FETCH_COMMENT,FETCH_COMMENTS,GET_ALL_CATEGORY,GET_ALL_POSTS,GET_CATEGORY_POSTS,VOTE_POSTS,FETCH_POST } from '../actions'
+  import { DELETE_POST,DELETE_COMMENT,CREATE_COMMENT,VOTE_COMMENT,UPDATE_COMMENT,FETCH_COMMENT,FETCH_COMMENTS,GET_ALL_CATEGORY,GET_ALL_POSTS,GET_CATEGORY_POSTS,VOTE_POSTS,FETCH_POST } from '../actions'
 
  import { combineReducers } from 'redux'
   
@@ -32,6 +32,8 @@
         }
         return post
       })
+      case DELETE_POST:
+      return action.posts
 
       case FETCH_POST:
         return action.post
@@ -54,6 +56,9 @@
        return action.comment
        case CREATE_COMMENT:
        return action.comment
+       case DELETE_COMMENT:
+       return action.comments
+       
       default:
         return state
     }

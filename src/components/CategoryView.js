@@ -1,7 +1,7 @@
 import React,  { Component } from 'react';
 import CategoryList from './CategoryList'
 import PostCard from './PostCard'
-import { getAllPosts,votePosts,getComments } from '../actions'
+import { getAllPosts,votePosts,getComments,deleteAPost } from '../actions'
 import { connect } from 'react-redux'
 import {withRouter} from 'react-router'
 import randomize from 'randomatic'
@@ -22,6 +22,11 @@ class CategoryView extends Component {
        
         
     }
+    deletePost(postId){
+      
+       this.props.deletePost(postId.id)
+       window.location.href=this.props.location.pathname
+   }
 
     updateVoteUp = (p) => {
         
@@ -53,7 +58,7 @@ class CategoryView extends Component {
         .sort((a,b)=>this.props.condition?posts[a].voteScore<posts[b].voteScore:posts[a].timestamp<posts[b].timestamp)
         .map((p)=> (
 
-          <PostCard  key={randomize('*', 10)} voteUp= {()=>this.updateVoteUp(posts[p])} voteDown= {()=>this.updateVoteDown(posts[p])} post={posts[p]} />
+          <PostCard  key={randomize('*', 10)} deletePost= {()=>this.deletePost(posts[p])} voteUp= {()=>this.updateVoteUp(posts[p])} voteDown= {()=>this.updateVoteDown(posts[p])} post={posts[p]} />
 
 
 ))
@@ -78,7 +83,8 @@ function mapStateToProps (posts) {
      return {
         getPosts: (data) => dispatch(getAllPosts()),
         getCategories: (data) => dispatch(getAllCategory()),
-        updateVote: (data,isup) => dispatch(votePosts(data,isup))
+        updateVote: (data,isup) => dispatch(votePosts(data,isup)),
+        deletePost: (data) => dispatch(deleteAPost(data))
         
         
         }

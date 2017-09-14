@@ -1,5 +1,5 @@
 
-import { createComment,voteComment,updateComment,fetchCommentDetail,fetchComments,fetchAllCategories,fetchPosts,fetchCategoryPosts,votePost,createPost,fetchPostDetail,updatePost } from '../utils/readableAPI'
+import { deletePost,deleteComment,createComment,voteComment,updateComment,fetchCommentDetail,fetchComments,fetchAllCategories,fetchPosts,fetchCategoryPosts,votePost,createPost,fetchPostDetail,updatePost } from '../utils/readableAPI'
 import randomize from 'randomatic'
 
 export const GET_ALL_CATEGORY = 'GET_ALL_CATEGORY'
@@ -14,6 +14,8 @@ export const VOTE_COMMENT='VOTE_COMMENT'
 export const CREATE_COMMENT='CREATE_COMMENT'
 export const FETCH_COMMENT='FETCH_COMMENT'
 export const UPDATE_COMMENT='UPDATE_COMMENT'
+export const DELETE_COMMENT='DELETE_COMMENT'
+export const DELETE_POST='DELETE_POST'
 
 function getAll(categories) {
   return {
@@ -214,5 +216,36 @@ export function createAComment(data,pid) {
     
     return  createComment(data).then(data =>
       dispatch(createTheComment(data)))
+  }
+}
+
+
+function deletedPost(posts) {
+  return {
+    type: DELETE_POST,
+    posts
+  }
+}
+
+export function deleteAPost(data) {
+  return dispatch => {
+    
+    return  deletePost(data).then(data =>
+      dispatch(deletedPost(data)))
+  }
+}
+
+function deletedComment(comments) {
+  return {
+    type: DELETE_COMMENT,
+    comments
+  }
+}
+
+export function deleteAComment(data) {
+  return dispatch => {
+    
+    return  deleteComment(data).then(data =>
+      dispatch(deletedComment(data)))
   }
 }

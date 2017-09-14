@@ -85,12 +85,6 @@ onClick={this.changeStateToFalse}
 
 
 
- <Route exact path="/post/:id"  render={ () => (
- <div>
-
-  <PostView  />
-  </div>
- )}/>
 
 
 
@@ -116,6 +110,12 @@ onClick={this.changeStateToFalse}
   </div>
  )}/>
 
+ <Route exact path="/:category/:id"  render={ () => (
+ <div>
+
+  <PostView  />
+  </div>
+ )}/>
 
 
 

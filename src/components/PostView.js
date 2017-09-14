@@ -1,7 +1,7 @@
 import React,  { Component } from 'react';
 import CategoryList from './CategoryList'
 import PostCard from './PostCard'
-import { getAllPosts,getComments,votePosts,voteComments,createAComment } from '../actions'
+import { getAllPosts,getComments,votePosts,voteComments,createAComment,deleteAPost,deleteAComment } from '../actions'
 import { connect } from 'react-redux'
 import {withRouter} from 'react-router'
 import randomize from 'randomatic'
@@ -31,6 +31,7 @@ class PostView extends Component {
         
         
     }
+   
 
     updateVoteUp = (p) => {
         
@@ -67,9 +68,23 @@ class PostView extends Component {
                 
               
         }
+
+        deleteThisComment(comment){
+            
+            this.props.deleteComment(comment.id)
+            fetchComments(this.props.match.params.id).then(result => this.handleChange(result))
+            
+         }
+
+        
+        deleteThisPost(post){
+            
+             this.props.deletePost(post.id)
+             window.location.href='/'
+         }
         getCommentCount = (p) => {
             this.props.fetchComments(p)
-            console.log(this.props)
+            
           }
           handleEvent  = (e) =>  {
             e.preventDefault()
@@ -84,8 +99,21 @@ class PostView extends Component {
     render() {
         const {posts} = this.props.posts
         const id=this.props.match.params.id
+        const category = this.props.match.params.category
+        const newPosts = Object.keys(posts).filter((post) => {
+            return posts[post].id === id?posts[post]:null;
+          })
+         
+          if (newPosts.length === 0) {
+            return (
+              <div>
+               
+              
+              </div>
+            )
+          }
           return (
-             
+            
  <div key={randomize('*', 10)}>
      
 { 
@@ -102,17 +130,22 @@ class PostView extends Component {
 <p className="post-author" key={posts[p].author}>{'Author: ' + posts[p].author}</p>
 <p className="post-created" key={posts[p].timestamp}>{'Created on: ' + new Date(posts[p].timestamp).toLocaleString()}</p>
 <p key={randomize('*', 10)}> {'Vote: ' + posts[p].voteScore}</p>
+<button key={randomize('*', 10)}
+onClick={()=>this.deleteThisPost(posts[p])}
+title="Sort by Date(Desc)"
+
+>Delete this post</button> 
 <a href={`/editpost/${posts[p].id}`} key={randomize('*', 10)}>Edit post</a>
 <button key={randomize('*', 10)}
 onClick={()=>this.updateVoteUp(posts[p])}
 title="Sort by Date(Desc)"
-color="#841584"
+
 >+</button> 
 
 <button key={randomize('*', 10)}
 onClick={()=>this.updateVoteDown(posts[p])}
 title="Sort by Date(Desc)"
-color="#841584"
+
 >-</button> 
 
 
@@ -130,15 +163,17 @@ color="#841584"
 <button key={randomize('*', 10)}
 onClick={()=>this.updateCommentVoteUp(comment)}
 title="Sort by Date(Desc)"
-color="#841584"
 >+</button> 
 
 <button key={randomize('*', 10)}
 onClick={()=>this.updateCommentVoteDown(comment)}
 title="Sort by Date(Desc)"
-color="#841584"
 >-</button> 
 <a href={`/editcomment/${comment.id}`} key={randomize('*', 10)}>Edit comment</a>
+<button key={randomize('*', 10)}
+onClick={()=>this.deleteThisComment(comment)}
+title="Sort by Date(Desc)"
+>Delete this comment</button> 
 
 </div>
     
@@ -165,8 +200,8 @@ color="#841584"
 
 <CategoryList />
   </div>)
-     
-    }
+         
+              }
 }
 
 
@@ -185,8 +220,11 @@ function mapStateToProps (posts) {
         getCategories: (data) => dispatch(getAllCategory()),
         updateVoteComments: (data,isup) => dispatch(voteComments(data,isup)),
         updateVote: (data,isup) => dispatch(votePosts(data,isup)),
-        createComment: (data,id) => dispatch(createAComment(data,id))
-      
+        createComment: (data,id) => dispatch(createAComment(data,id)),
+        deletePost: (data) => dispatch(deleteAPost(data)),
+        deleteComment: (data) => dispatch(deleteAComment(data))
+        
+       
         }
     }
   
